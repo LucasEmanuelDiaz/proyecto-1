@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import { productsRouter } from './routes/products.routes.js'
+import { authRouter } from './routes/auth.routes.js'
 
 dotenv.config()
 const app = express()
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3000
 const API_URL = process.env.API_URL || '/'
 
 app.use(`${API_URL}/products`, productsRouter)
+app.use(`${API_URL}/auth`, authRouter)
 
 // middleware catch-all para 404
 app.use((req, res) => {
