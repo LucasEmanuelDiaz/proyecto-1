@@ -1,64 +1,28 @@
-// destructury: del comando inicial extraigo la 3era y 4ta palabra
-const [, , method, resource] = process.argv;
+import express from 'express'
+import cors from 'cors'
+import dotenv from 'dotenv'
 
-// funcion para obtener datos
-// path => [3] palabra del comando
-async function getData(path) {
-  const response = await fetch("https://fakestoreapi.com/" + path);
-  const data = await response.json();
-  console.log(data);
-}
+dotenv.config()
+const app = express()
 
-// funcion para crear un dato en el servidor
-// path => [3] palabra del comando
-// body => objeto conformado por:
-//   title => [4] palabra del comando
-//   price => [5] palabra del comando
-//   category => [6] palabra del comando
-async function postData(path, body) {
-  const response = await fetch("https://fakestoreapi.com/" + path, {
-    method: "POST",
-    body: body
-  });
+// middleware para permitir cualquier origen
+app.use(cors())
 
-  const data = await response.json();
-  console.log(data);
-}
+// middleware para parsear el cuerpo de las peticiones como JSON
+app.use(express.json())
 
-// funcion para eliminar un dato en el servidor
-// path => [3] palabra del comando
-// id => [4] palabra del comando
-async function deleteData(path, id) {
-  const response = await fetch("https://fakestoreapi.com/" + path + "/" + id, {
-    method: "DELETE",
-  });
+// ejemplo de ruta
+app.get('/api/products', (req, res) => {
+  res.json({ msg: 'Lista de productos' })
+})
 
-  const data = await response.json();
-  console.log(data);
-}
+// middleware catch-all para 404
+app.use((req, res) => {
+  res.status(404).json({ 
+    error: 'Ruta no encontrada' 
+  })
+})
 
-if (method && resource) {
-  if (method.toUpperCase() === "GET") {
-    getData(resource);
-  }
+const PORT = process.env.PORT || 3000
+app.listen(PORT, () => console.log(`Servidor en puerto ${PORT}`))
 
-  if (method.toUpperCase() === "POST") {
-    const title = process.argv[4];
-    const price = process.argv[5];
-    const category = process.argv[6];
-
-    const body = {
-      title,
-      price,
-      category
-    };
-
-    postData(resource, body);
-  }
-
-  if (method.toUpperCase() === "DELETE") {
-    const id = process.argv[4];
-
-    deleteData(resource, id);
-  }
-}
