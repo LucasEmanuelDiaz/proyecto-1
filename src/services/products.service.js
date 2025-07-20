@@ -1,44 +1,30 @@
-import { db } from '../config/firebase.js';
-import {
-  collection,
-  getDocs,
-  doc,
-  getDoc,
-  addDoc,
-  deleteDoc
-} from 'firebase/firestore/lite'
+import { ProductModel } from "../models/product.model.js";
 
-const productsCol = collection(db, 'products')
+export class ProductService {
+  productModel = new ProductModel();
 
-/** Obtiene todos los productos */
-export const getAllProducts = async () => {
-  const snapshot = await getDocs(productsCol)
-  return snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
-}
-
-/** Obtiene un producto por su ID */
-export const getProductById = async (id) => {
-  const ref = doc(db, 'products', id)
-  const snapshot = await getDoc(ref)
-
-  if (!snapshot.exists()) {
-    throw new Error('Producto no encontrado')
+  /** Obtiene todos los productos */
+  async getAll() {
+    return await this.productModel.getAll();
   }
 
-  return { 
-    id: snapshot.id, 
-    ...snapshot.data() 
+  /** Obtiene un producto por su ID */
+  async getById(id) {
+    return await this.productModel.getById(id);
   }
-}
 
-/** Crea un nuevo producto y devuelve su ID */
-export const addProduct = async (data) => {
-  const ref = await addDoc(productsCol, data)
-  return ref.id
-}
+  /** Crea un nuevo producto y devuelve su ID */
+  async create(data) {
+    return await this.productModel.create(data);
+  }
 
-/** Elimina un producto por su ID */
-export const deleteProductById = async (id) => {
-  const ref = doc(db, 'products', id)
-  await deleteDoc(ref)
+  /** Actualiza un producto por su ID */
+  async update(id, data) {
+    return await this.productModel.update(id, data);
+  }
+
+  /** Elimina un producto por su ID */
+  async delete(id) {
+    return await this.productModel.delete(id);
+  }
 }

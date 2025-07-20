@@ -1,18 +1,21 @@
-import { Router } from 'express'
-import { getProducts, getProduct, createProduct, deleteProduct } from '../controllers/products.controller.js'
+import { Router } from 'express';
+import { getProducts, getProduct, createProduct, updateProduct, deleteProduct } from '../controllers/products.controller.js';
 
-const router = Router()
+const router = Router();
 
 // obtener lista de productos
-router.get('/', getProducts)
+router.get('/', getProducts);
 
 // obtengo producto por ID
-router.get('/:id', getProduct)
+router.get('/:id', getProduct);
 
-// crear un nuevo producto (placeholder)
-router.post('/create', createProduct)
+// crear un nuevo producto
+router.post('/create', createProduct);
 
-// eliminar un producto (placeholder)
-router.delete('/:id', deleteProduct)
+// actualizar un producto
+router.put('/:id', updateProduct);
 
-export { router as productsRouter }
+// eliminar un producto
+router.delete('/:id', deleteProduct);
+
+export { router as productsRouter };
